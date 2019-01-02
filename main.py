@@ -8,5 +8,7 @@ with open('fantlab_books_data.csv', 'r') as csv_old:
     for row in reader:
         books_dict.append(row)
 
-analyze_authors.form_authors_dict(books_dict)
-# analyze_books.analyze_books(books_dict)
+analyze_books.analyze_books(books_dict)
+print("--------------------------------")
+print()
+analyze_authors.analyze_authors(books_dict)
