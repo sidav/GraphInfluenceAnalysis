@@ -22,7 +22,6 @@ def get_author_index_by_name(adict, name):
     return -1
 
 
-
 def form_authors_dict(books_dict):
     authors = []
     for book in books_dict:
@@ -31,10 +30,10 @@ def form_authors_dict(books_dict):
             for author in authors:
                 if author['name'] == book['book_author']:
                     author['similar_to'] += book['book_similar']
+                    author['books'].append(book['book_id'])
                     author_not_exists = False
-                    break
             if author_not_exists:
-                authors.append({"name": book['book_author'], "similar_to": book['book_similar']})
+                authors.append({"name": book['book_author'], "similar_to": book['book_similar'], "books": [book["book_id"]]})
     return authors
 
 
