@@ -1,6 +1,7 @@
 import networkx as nx
 
 COUNT_MISSING_DATES = False
+PRINT_TOP_N = 10
 
 
 def progressBar(title, value, endvalue, bar_length=20):
@@ -13,6 +14,7 @@ def progressBar(title, value, endvalue, bar_length=20):
     if value == endvalue:
         sys.stdout.write("\n")
     sys.stdout.flush()
+
 
 def sort_list(in_list):
     return sorted(in_list.items(), key=lambda x: x[1])
@@ -90,6 +92,18 @@ def form_authors_graph(books_dict, authors_dict):
                 #     print("No book found!")
     return g
 
+##################################################
+
+
+def print_top(adict, all_list):
+    top = all_list[-PRINT_TOP_N:]
+    for i in top:
+        if len(adict) > i[0]:
+            author = adict[i[0]]
+            print(author["name"], i[1])
+        else:
+            print('Неопознанный автор')
+
 
 def analyze_authors(books_dict):
     adict = form_authors_dict(books_dict)
@@ -99,40 +113,17 @@ def analyze_authors(books_dict):
     print()
     print('------- AUTHORS INFLUENCE ANALYSIS -------')
     print('Graph is built. Calculating in-degree centrality...')
-    top = sort_list(nx.in_degree_centrality(g))[-5:]
-    for i in top:
-        if len(adict) > i[0]:
-            author = adict[i[0]]
-            print(author["name"], i[1])
-        else:
-            print('Неопознанный автор')
+    print_top(adict, sort_list(nx.in_degree_centrality(g)))
 
     print()
     print('Calculating closeness centrality...')
-    top = sort_list(nx.closeness_centrality(g))[-5:]
-    for i in top:
-        if len(adict) > i[0]:
-            author = adict[i[0]]
-            print(author["name"], i[1])
-        else:
-            print('Неопознанный автор')
+    print_top(adict, sort_list(nx.closeness_centrality(g)))
+
 
     print()
     print('Calculating harmonic centrality...')
-    top = sort_list(nx.harmonic_centrality(g))[-5:]
-    for i in top:
-        if len(adict) > i[0]:
-            author = adict[i[0]]
-            print(author["name"], i[1])
-        else:
-            print('Неопознанный автор')
+    print_top(adict, sort_list(nx.harmonic_centrality(g)))
 
     print()
     print('Calculating PageRank centrality...')
-    top = sort_list(nx.pagerank(g))[-5:]
-    for i in top:
-        if len(adict) > i[0]:
-            author = adict[i[0]]
-            print(author["name"], i[1])
-        else:
-            print('Неопознанный автор')
+    print_top(adict, sort_list(nx.pagerank(g)))

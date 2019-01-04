@@ -1,6 +1,7 @@
 import networkx as nx
 
 COUNT_MISSING_DATES = False
+PRINT_TOP_N = 10
 
 def sort_list(in_list):
     return sorted(in_list.items(), key=lambda x: x[1])
@@ -35,6 +36,19 @@ def get_book_by_id(books_dict, requested_id):
                 return books_dict[actual_index]
 
 
+##########################################################
+
+
+def print_top_n(books_dict, all_list):
+    top = all_list[-PRINT_TOP_N:]
+    for i in top:
+        if len(books_dict) > i[0]:
+            book = get_book_by_id(books_dict, int(i[0]))
+            print(i[0], book['book_id'], '"' + book['book_title'] + '"', book['book_author'], "(" + book['book_release_year'] + ")", book['book_score'], i[1])
+        else:
+            print('Неопознанная книга, id =', i[0])
+
+
 def analyze_books(books_dict):
     g = nx.DiGraph()
 
@@ -59,40 +73,17 @@ def analyze_books(books_dict):
     # MEASUREMENTS
     print('------- BOOKS INFLUENCE ANALYSIS -------')
     print('Graph is built. Calculating in-degree centrality...')
-    top = sort_list(nx.in_degree_centrality(g))[-5:]
-    for i in top:
-        if len(books_dict) > i[0]:
-            book = get_book_by_id(books_dict, int(i[0]))
-            print(i[0], book['book_id'], '"' + book['book_title'] + '"', book['book_author'], "(" + book['book_release_year'] + ")", book['book_score'], i[1])
-        else:
-            print('Неопознанная книга, id =', i[0])
+    print_top_n(books_dict, sort_list(nx.in_degree_centrality(g)))
 
     print()
     print('Calculating closeness centrality...')
-    top = sort_list(nx.closeness_centrality(g))[-5:]
-    for i in top:
-        if len(books_dict) > i[0]:
-            book = get_book_by_id(books_dict, int(i[0]))
-            print(i[0], book['book_id'], '"' + book['book_title'] + '"', book['book_author'], "(" + book['book_release_year'] + ")", book['book_score'], i[1])
-        else:
-            print('Неопознанная книга, id =', i[0])
+    print_top_n(books_dict, sort_list(nx.closeness_centrality(g)))
 
     print()
     print('Calculating harmonic centrality...')
-    top = sort_list(nx.harmonic_centrality(g))[-5:]
-    for i in top:
-        if len(books_dict) > i[0]:
-            book = get_book_by_id(books_dict, int(i[0]))
-            print(i[0], book['book_id'], '"' + book['book_title'] + '"', book['book_author'], "(" + book['book_release_year'] + ")", book['book_score'], i[1])
-        else:
-            print('Неопознанная книга, id =', i[0])
+    print_top_n(books_dict, sort_list(nx.harmonic_centrality(g)))
+
 
     print()
     print('Calculating PageRank centrality...')
-    top = sort_list(nx.pagerank(g))[-5:]
-    for i in top:
-        if len(books_dict) > i[0]:
-            book = get_book_by_id(books_dict, int(i[0]))
-            print(i[0], book['book_id'], '"' + book['book_title'] + '"', book['book_author'], "(" + book['book_release_year'] + ")", book['book_score'], i[1])
-        else:
-            print('Неопознанная книга, id =', i[0])
+    print_top_n(books_dict, sort_list(nx.pagerank(g)))
