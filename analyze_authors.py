@@ -28,6 +28,23 @@ def get_book_by_id(books_dict, requested_id):
                 return books_dict[actual_index]
 
 
+def get_list_of_similar_books_regarding_year(books_dict, book):
+    sim_ids_list = ''
+    for sim_id in book['book_similar'].split(';'):
+        sim_book = get_book_by_id(books_dict, sim_id)
+        if COUNT_MISSING_DATES:
+            if sim_book is not None and (
+                    sim_book["book_release_year"] == '' or book["book_release_year"] == '' or int(
+                    sim_book["book_release_year"]) < int(book["book_release_year"])):
+                sim_ids_list += str(sim_id) + ';'
+        else:
+            if sim_book is not None and (
+                    sim_book["book_release_year"] != '' and book["book_release_year"] != '' and int(
+                    sim_book["book_release_year"]) < int(book["book_release_year"])):
+                sim_ids_list += str(sim_id) + ';'
+    return sim_ids_list
+
+
 def get_author_index_by_name(adict, name):
     for i in range(len(adict)):
         author = adict[i]
@@ -45,11 +62,11 @@ def form_authors_dict(books_dict):
             author_not_exists = True
             for author in authors:
                 if author['name'] == book['book_author']:
-                    author['similar_to'] += book['book_similar'] + ';'
+                    author['similar_to'] += get_list_of_similar_books_regarding_year(books_dict, book)
                     author['books'].append(book['book_id'])
                     author_not_exists = False
             if author_not_exists:
-                authors.append({"name": book['book_author'], "similar_to": book['book_similar'], "books": [book["book_id"]]})
+                authors.append({"name": book['book_author'], "similar_to": get_list_of_similar_books_regarding_year(books_dict, book), "books": [book["book_id"]]})
     return authors
 
 
