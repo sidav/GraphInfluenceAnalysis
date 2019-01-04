@@ -10,5 +10,4 @@ with open('fantlab_books_data.csv', 'r') as csv_old:
 
 analyze_books.analyze_books(books_dict)
 print("--------------------------------")
-print()
 analyze_authors.analyze_authors(books_dict)

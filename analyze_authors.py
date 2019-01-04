@@ -1,5 +1,19 @@
 import networkx as nx
 
+COUNT_MISSING_DATES = False
+
+
+def progressBar(title, value, endvalue, bar_length=20):
+    import sys
+    percent = float(value) / endvalue
+    arrow = '-' * int(round(percent * bar_length) - 1) + '>'
+    spaces = ' ' * (bar_length - len(arrow))
+
+    sys.stdout.write("\r" + title + " [{0}] {1}%".format(arrow + spaces, int(round(percent * 100))))
+    if value == endvalue:
+        sys.stdout.write("\n")
+    sys.stdout.flush()
+
 
 def sort_list(in_list):
     return sorted(in_list.items(), key=lambda x: x[1])
@@ -24,7 +38,9 @@ def get_author_index_by_name(adict, name):
 
 def form_authors_dict(books_dict):
     authors = []
-    for book in books_dict:
+    for book_index in range(len(books_dict)):
+        progressBar('Forming authors dict...', book_index, len(books_dict)-1, 20)
+        book = books_dict[book_index]
         if book['book_id_exists'] == 'True' and len(book['book_similar']) > 0:
             author_not_exists = True
             for author in authors:
@@ -40,6 +56,7 @@ def form_authors_dict(books_dict):
 def form_authors_graph(books_dict, authors_dict):
     g = nx.DiGraph()
     for index in range(0, len(authors_dict)):
+        progressBar('Forming the authors graph... ', index, len(authors_dict)-1, 20)
         author = authors_dict[index]
         if len(author['similar_to']) > 0:
             splitted_list = author['similar_to'].split(';')
@@ -63,6 +80,7 @@ def analyze_authors(books_dict):
     g = form_authors_graph(books_dict, adict)
 
     # MEASUREMENTS
+    print()
     print('------- AUTHORS INFLUENCE ANALYSIS -------')
     print('Graph is built. Calculating in-degree centrality...')
     top = sort_list(nx.in_degree_centrality(g))[-5:]
