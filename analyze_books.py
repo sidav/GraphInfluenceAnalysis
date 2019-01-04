@@ -6,6 +6,18 @@ def sort_list(in_list):
     return sorted(in_list.items(), key=lambda x: x[1])
 
 
+def progressBar(title, value, endvalue, bar_length=20):
+    import sys
+    percent = float(value) / endvalue
+    arrow = '-' * int(round(percent * bar_length) - 1) + '>'
+    spaces = ' ' * (bar_length - len(arrow))
+
+    sys.stdout.write("\r" + title + " [{0}] {1}% ({2} out of {3})".format(arrow + spaces, int(round(percent * 100)), value, endvalue))
+    if value == endvalue:
+        sys.stdout.write("\n")
+    sys.stdout.flush()
+
+
 def get_book_by_id(books_dict, requested_id):
     requested_id = int(requested_id)
     if len(books_dict) > requested_id:
@@ -27,7 +39,9 @@ def analyze_books(books_dict):
     g = nx.DiGraph()
 
     # read all the books and append'em to the graph.
-    for book in books_dict:
+    for book_index in range(len(books_dict)):
+        progressBar("Building the books influence graph...", book_index, len(books_dict)-1, 20)
+        book = books_dict[book_index]
         if book['book_id_exists'] == 'True':
             book_id = int(book['book_id'])
 

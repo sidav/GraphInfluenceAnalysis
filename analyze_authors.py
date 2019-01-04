@@ -9,11 +9,10 @@ def progressBar(title, value, endvalue, bar_length=20):
     arrow = '-' * int(round(percent * bar_length) - 1) + '>'
     spaces = ' ' * (bar_length - len(arrow))
 
-    sys.stdout.write("\r" + title + " [{0}] {1}%".format(arrow + spaces, int(round(percent * 100))))
+    sys.stdout.write("\r" + title + " [{0}] {1}% ({2} out of {3})".format(arrow + spaces, int(round(percent * 100)), value, endvalue))
     if value == endvalue:
         sys.stdout.write("\n")
     sys.stdout.flush()
-
 
 def sort_list(in_list):
     return sorted(in_list.items(), key=lambda x: x[1])
