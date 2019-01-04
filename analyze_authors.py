@@ -29,7 +29,7 @@ def form_authors_dict(books_dict):
             author_not_exists = True
             for author in authors:
                 if author['name'] == book['book_author']:
-                    author['similar_to'] += book['book_similar']
+                    author['similar_to'] += book['book_similar'] + ';'
                     author['books'].append(book['book_id'])
                     author_not_exists = False
             if author_not_exists:
@@ -42,7 +42,10 @@ def form_authors_graph(books_dict, authors_dict):
     for index in range(0, len(authors_dict)):
         author = authors_dict[index]
         if len(author['similar_to']) > 0:
-            similar_list = list(map(lambda x: int(x), author['similar_to'].split(';')))
+            splitted_list = author['similar_to'].split(';')
+            if splitted_list[-1] == '':
+                splitted_list = splitted_list[:-1]
+            similar_list = list(map(lambda x: int(x), splitted_list))
             for i in similar_list:
                 book = get_book_by_id(books_dict, i)
                 if book is not None and book["book_author"] != author["name"]:
