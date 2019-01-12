@@ -53,6 +53,8 @@ def analyze_books(books_dict):
     g = nx.DiGraph()
 
     # read all the books and append'em to the graph.
+    cites_accounted = 0
+    total_cites = 0
     for book_index in range(len(books_dict)):
         progressBar("Building the books influence graph...", book_index, len(books_dict)-1, 20)
         book = books_dict[book_index]
@@ -62,12 +64,15 @@ def analyze_books(books_dict):
             if len(book['book_similar']) > 0:
                 book_similar_list = list(map(lambda x: int(x), book['book_similar'].split(';')))
                 for i in book_similar_list:
+                    total_cites += 1
                     sim_book = get_book_by_id(books_dict, i)
                     if COUNT_MISSING_DATES:
                         if sim_book is not None and (sim_book["book_release_year"] == '' or book["book_release_year"] == '' or int(sim_book["book_release_year"]) < int(book["book_release_year"])):
+                            cites_accounted += 1
                             g.add_edge(book_id, i)
                     else:
                         if sim_book is not None and (sim_book["book_release_year"] != '' and book["book_release_year"] != '' and int(sim_book["book_release_year"]) < int(book["book_release_year"])):
+                            cites_accounted += 1
                             g.add_edge(book_id, i)
 
     # MEASUREMENTS
@@ -87,3 +92,6 @@ def analyze_books(books_dict):
     print()
     print('Calculating PageRank centrality...')
     print_top_n(books_dict, sort_list(nx.pagerank(g)))
+
+    print()
+    print("TOTAL:", total_cites, "; ACCOUNTED:", cites_accounted)
