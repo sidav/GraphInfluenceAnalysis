@@ -14,19 +14,23 @@ def normalize(dct): # makes all the values in range [0,1]
             lowest_val = value
         if value > highest_val:
             highest_val = value
-            print(key)
     for key in dct.keys():
         dct[key] = (dct[key] - lowest_val) / (highest_val - lowest_val)
     return dct
 
 
+def get_mean_for_dicts_values(d1, d2, d3, d4):
+    final_dict = {}
+    for key in d1.keys():
+        final_dict[key] = (d1[key]+d2[key]+d3[key]+d4[key]) / 4
+    return final_dict
+
+
 def calculate_total_measurement(graph):
-    print()
-    lst = []
     idg = normalize(nx.in_degree_centrality(graph))
     cls = normalize(nx.closeness_centrality(graph))
     hrm = normalize(nx.harmonic_centrality(graph))
     pgr = normalize(nx.pagerank(graph))
-
-    print(idg)
+    final = normalize(get_mean_for_dicts_values(idg, cls, hrm, pgr))
+    return final
     # print(idg[4325])
