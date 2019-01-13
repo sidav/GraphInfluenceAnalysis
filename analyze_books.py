@@ -60,16 +60,6 @@ def calculate_mean_of_values_for_keys(d1, d2, d3, d4):
     return final_dict
 
 
-def calculate_mean_centrality(graph):
-    idg = normalize_dict(nx.in_degree_centrality(graph))
-    cls = normalize_dict(nx.closeness_centrality(graph))
-    hrm = normalize_dict(nx.harmonic_centrality(graph))
-    pgr = normalize_dict(nx.pagerank(graph))
-    final = normalize_dict(calculate_mean_of_values_for_keys(idg, cls, hrm, pgr))
-    return final
-    # print(idg[4325])
-
-
 ##########################################################
 
 
@@ -113,24 +103,28 @@ def analyze_books(books_dict):
     # MEASUREMENTS
     print('------- BOOKS INFLUENCE ANALYSIS -------')
     print('Graph is built. Calculating in-degree centrality...')
-    print_top_n(books_dict,sort_list(normalize_dict(nx.in_degree_centrality(g))))
+    idg = normalize_dict(nx.in_degree_centrality(g))
+    print_top_n(books_dict,sort_list(idg))
 
     print()
     print('Calculating closeness centrality...')
-    print_top_n(books_dict,sort_list(normalize_dict(nx.closeness_centrality(g))))
+    cls = normalize_dict(nx.closeness_centrality(g))
+    print_top_n(books_dict,sort_list(cls))
 
     print()
     print('Calculating harmonic centrality...')
-    print_top_n(books_dict,sort_list(normalize_dict(nx.harmonic_centrality(g))))
-
+    hrm = normalize_dict(nx.harmonic_centrality(g))
+    print_top_n(books_dict,sort_list(hrm))
 
     print()
     print('Calculating PageRank centrality...')
-    print_top_n(books_dict,sort_list(normalize_dict(nx.pagerank(g))))
+    pgr = normalize_dict(nx.pagerank(g))
+    print_top_n(books_dict,sort_list(pgr))
 
     print()
     print('Calculating mean centrality...')
-    print_top_n(books_dict, sort_list(calculate_mean_centrality(g)))
+    mean_centrality = normalize_dict(calculate_mean_of_values_for_keys(idg, cls, hrm, pgr))
+    print_top_n(books_dict, sort_list(mean_centrality))
 
     print()
     print("TOTAL:", total_cites, "cites;", "ACCOUNTED:", cites_accounted, "cites.")
