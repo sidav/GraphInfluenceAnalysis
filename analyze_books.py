@@ -75,7 +75,8 @@ def calculate_mean_centrality(graph):
 
 def print_top_n(books_dict, all_list):
     top = all_list[-PRINT_TOP_N:]
-    for i in top:
+    for ind in reversed(range(PRINT_TOP_N)):
+        i = top[ind]
         if len(books_dict) > i[0]:
             book = get_book_by_id(books_dict, int(i[0]))
             print(i[0], book['book_id'], '"' + book['book_title'] + '"', book['book_author'], "(" + book['book_release_year'] + ")", book['book_score'], i[1])
