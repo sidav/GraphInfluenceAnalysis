@@ -3,6 +3,20 @@ import networkx as nx
 COUNT_MISSING_DATES = False
 PRINT_TOP_N = 10
 
+
+def normalize_dict(dct):  # makes all the values in range [0,1]
+    lowest_val = 9999999.0
+    highest_val = 0.0
+    for key, value in dct.items():
+        if value < lowest_val:
+            lowest_val = value
+        if value > highest_val:
+            highest_val = value
+    for key in dct.keys():
+        dct[key] = (dct[key] - lowest_val) / (highest_val - lowest_val)
+    return dct
+
+
 def sort_list(in_list):
     return sorted(in_list.items(), key=lambda x: x[1])
 
@@ -34,6 +48,26 @@ def get_book_by_id(books_dict, requested_id):
         for actual_index in range(1, len(books_dict)):
             if len(books_dict[actual_index]['book_id']) > 0 and int(books_dict[actual_index]['book_id']) == requested_id:
                 return books_dict[actual_index]
+
+
+########### MEAN CENTRALITY #########
+
+
+def calculate_mean_of_values_for_keys(d1, d2, d3, d4):
+    final_dict = {}
+    for key in d1.keys():
+        final_dict[key] = (d1[key]+d2[key]+d3[key]+d4[key]) / 4
+    return final_dict
+
+
+def calculate_mean_centrality(graph):
+    idg = normalize_dict(nx.in_degree_centrality(graph))
+    cls = normalize_dict(nx.closeness_centrality(graph))
+    hrm = normalize_dict(nx.harmonic_centrality(graph))
+    pgr = normalize_dict(nx.pagerank(graph))
+    final = normalize_dict(calculate_mean_of_values_for_keys(idg, cls, hrm, pgr))
+    return final
+    # print(idg[4325])
 
 
 ##########################################################
@@ -78,20 +112,24 @@ def analyze_books(books_dict):
     # MEASUREMENTS
     print('------- BOOKS INFLUENCE ANALYSIS -------')
     print('Graph is built. Calculating in-degree centrality...')
-    print_top_n(books_dict, sort_list(nx.in_degree_centrality(g)))
+    print_top_n(books_dict,sort_list(normalize_dict(nx.in_degree_centrality(g))))
 
     print()
     print('Calculating closeness centrality...')
-    print_top_n(books_dict, sort_list(nx.closeness_centrality(g)))
+    print_top_n(books_dict,sort_list(normalize_dict(nx.closeness_centrality(g))))
 
     print()
     print('Calculating harmonic centrality...')
-    print_top_n(books_dict, sort_list(nx.harmonic_centrality(g)))
+    print_top_n(books_dict,sort_list(normalize_dict(nx.harmonic_centrality(g))))
 
 
     print()
     print('Calculating PageRank centrality...')
-    print_top_n(books_dict, sort_list(nx.pagerank(g)))
+    print_top_n(books_dict,sort_list(normalize_dict(nx.pagerank(g))))
 
     print()
-    print("TOTAL:", total_cites, "; ACCOUNTED:", cites_accounted)
+    print('Calculating mean centrality...')
+    print_top_n(books_dict, sort_list(calculate_mean_centrality(g)))
+
+    print()
+    print("TOTAL:", total_cites, "cites;", "ACCOUNTED:", cites_accounted, "cites.")
