@@ -2,7 +2,7 @@ import networkx as nx
 
 COUNT_MISSING_DATES = False
 PRINT_TOP_N = 10
-
+total_cites = cites_accounted = 0
 
 def progressBar(title, value, endvalue, bar_length=20):
     import sys
@@ -16,8 +16,32 @@ def progressBar(title, value, endvalue, bar_length=20):
     sys.stdout.flush()
 
 
+def normalize_dict(dct):  # makes all the values in range [0,1]
+    lowest_val = 9999999.0
+    highest_val = 0.0
+    for key, value in dct.items():
+        if value < lowest_val:
+            lowest_val = value
+        if value > highest_val:
+            highest_val = value
+    for key in dct.keys():
+        dct[key] = (dct[key] - lowest_val) / (highest_val - lowest_val)
+    return dct
+
+
 def sort_list(in_list):
     return sorted(in_list.items(), key=lambda x: x[1])
+
+
+########### MEAN CENTRALITY #########
+def calculate_mean_of_values_for_keys(d1, d2, d3, d4):
+    final_dict = {}
+    for key in d1.keys():
+        final_dict[key] = (d1[key]+d2[key]+d3[key]+d4[key]) / 4
+    return final_dict
+
+
+#######################################
 
 
 def get_book_by_id(books_dict, requested_id):
@@ -30,19 +54,23 @@ def get_book_by_id(books_dict, requested_id):
 
 
 def get_list_of_similar_books_regarding_year(books_dict, book):
+    global total_cites, cites_accounted
     sim_ids_list = ''
     for sim_id in book['book_similar'].split(';'):
+        total_cites += 1
         sim_book = get_book_by_id(books_dict, sim_id)
         if COUNT_MISSING_DATES:
             if sim_book is not None and (
                     sim_book["book_release_year"] == '' or book["book_release_year"] == '' or int(
                     sim_book["book_release_year"]) < int(book["book_release_year"])):
                 sim_ids_list += str(sim_id) + ';'
+                cites_accounted += 1
         else:
             if sim_book is not None and (
                     sim_book["book_release_year"] != '' and book["book_release_year"] != '' and int(
                     sim_book["book_release_year"]) < int(book["book_release_year"])):
                 sim_ids_list += str(sim_id) + ';'
+                cites_accounted += 1
     return sim_ids_list
 
 
@@ -95,9 +123,10 @@ def form_authors_graph(books_dict, authors_dict):
 ##################################################
 
 
-def print_top(adict, all_list):
+def print_top_n(adict, all_list):
     top = all_list[-PRINT_TOP_N:]
-    for i in top:
+    for ind in reversed(range(PRINT_TOP_N)):
+        i = top[ind]
         if len(adict) > i[0]:
             author = adict[i[0]]
             print(author["name"], i[1])
@@ -113,17 +142,28 @@ def analyze_authors(books_dict):
     print()
     print('------- AUTHORS INFLUENCE ANALYSIS -------')
     print('Graph is built. Calculating in-degree centrality...')
-    print_top(adict, sort_list(nx.in_degree_centrality(g)))
+    idg = normalize_dict(nx.in_degree_centrality(g))
+    print_top_n(adict, sort_list(idg))
 
     print()
     print('Calculating closeness centrality...')
-    print_top(adict, sort_list(nx.closeness_centrality(g)))
-
+    cls = normalize_dict(nx.closeness_centrality(g))
+    print_top_n(adict, sort_list(cls))
 
     print()
     print('Calculating harmonic centrality...')
-    print_top(adict, sort_list(nx.harmonic_centrality(g)))
+    hrm = normalize_dict(nx.harmonic_centrality(g))
+    print_top_n(adict, sort_list(hrm))
 
     print()
     print('Calculating PageRank centrality...')
-    print_top(adict, sort_list(nx.pagerank(g)))
+    pgr = normalize_dict(nx.pagerank(g))
+    print_top_n(adict, sort_list(pgr))
+
+    print()
+    print('Calculating mean centrality...')
+    mean_centrality = normalize_dict(calculate_mean_of_values_for_keys(idg, cls, hrm, pgr))
+    print_top_n(adict, sort_list(mean_centrality))
+
+    print()
+    print("TOTAL:", total_cites, "cites;", "ACCOUNTED:", cites_accounted, "cites.")
