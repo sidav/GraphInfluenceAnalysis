@@ -63,24 +63,53 @@ def calculate_mean_of_values_for_keys(d1, d2, d3, d4):
 ##########################################################
 
 
-def print_top_n(books_dict, all_list):
+def print_top_n(books_dict, all_list, print_graph=False):
     top = all_list[-PRINT_TOP_N:]
+
+    top_names = []
+    top_vals = []
+
     for ind in reversed(range(PRINT_TOP_N)):
         i = top[ind]
         if len(books_dict) > i[0]:
             book = get_book_by_id(books_dict, int(i[0]))
+            top_names.append(book['book_title'] + "\n" + book['book_author'])
+            top_vals.append(i[1])
             print(i[0], book['book_id'], '"' + book['book_title'] + '"', book['book_author'], "(" + book['book_release_year'] + ")", book['book_score'], i[1])
         else:
             print('Неопознанная книга, id =', i[0])
 
+    if print_graph:
+        import matplotlib.pyplot as plt
+        import numpy as np
+        plt.rcdefaults()
+        fig, ax = plt.subplots()
 
-def analyze_books(books_dict):
+        y_pos = [i - 0.5 for i in np.arange(PRINT_TOP_N)]
+        print(y_pos)
+        ax.barh(y_pos, top_vals, align='center',
+                color='green', ecolor='black')
+        ax.set_yticks(y_pos)
+        ax.set_yticklabels(top_names)
+        ax.invert_yaxis()  # labels read top-to-bottom
+        ax.set_xlabel('Средняя центральность')
+        ax.xaxis.grid()
+        # ax.set_title('How fast do you want to go today?')
+        fig.tight_layout()
+        fig.savefig('top_books_mean.png')
+        # plt.tight_layout()
+        # plt.show()
+
+
+def analyze_books(books_dict, total_records_to_measure=-1):
     g = nx.DiGraph()
 
     # read all the books and append'em to the graph.
     cites_accounted = 0
     total_cites = 0
     for book_index in range(len(books_dict)):
+        if book_index == total_records_to_measure:
+            break
         progressBar("Building the books influence graph...", book_index, len(books_dict)-1, 20)
         book = books_dict[book_index]
         if book['book_id_exists'] == 'True':
@@ -124,7 +153,7 @@ def analyze_books(books_dict):
     print()
     print('Calculating mean centrality...')
     mean_centrality = normalize_dict(calculate_mean_of_values_for_keys(idg, cls, hrm, pgr))
-    print_top_n(books_dict, sort_list(mean_centrality))
+    print_top_n(books_dict, sort_list(mean_centrality), print_graph=True)
 
     print()
     print("TOTAL:", total_cites, "cites;", "ACCOUNTED:", cites_accounted, "cites.")
