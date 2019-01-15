@@ -123,15 +123,40 @@ def form_authors_graph(books_dict, authors_dict):
 ##################################################
 
 
-def print_top_n(adict, all_list):
+def print_top_n(adict, all_list, print_graph=False):
     top = all_list[-PRINT_TOP_N:]
+    top_vals = []
+    top_names = []
     for ind in reversed(range(PRINT_TOP_N)):
         i = top[ind]
         if len(adict) > i[0]:
             author = adict[i[0]]
+            top_names.append(author["name"])
+            top_vals.append(i[1])
             print(author["name"], i[1])
         else:
             print('Неопознанный автор')
+
+    if print_graph:
+        import matplotlib.pyplot as plt
+        import numpy as np
+        plt.rcdefaults()
+        fig, ax = plt.subplots()
+
+        y_pos = [i - 0.5 for i in np.arange(PRINT_TOP_N)]
+        print(y_pos)
+        ax.barh(y_pos, top_vals, align='center',
+                color='green', ecolor='black')
+        ax.set_yticks(y_pos)
+        ax.set_yticklabels(top_names)
+        ax.invert_yaxis()  # labels read top-to-bottom
+        ax.set_xlabel('Средняя центральность по авторам')
+        ax.xaxis.grid()
+        # ax.set_title('How fast do you want to go today?')
+        fig.tight_layout()
+        fig.savefig('top_authors_mean.png')
+        # plt.tight_layout()
+        # plt.show()
 
 
 def analyze_authors(books_dict):
@@ -163,7 +188,7 @@ def analyze_authors(books_dict):
     print()
     print('Calculating mean centrality...')
     mean_centrality = normalize_dict(calculate_mean_of_values_for_keys(idg, cls, hrm, pgr))
-    print_top_n(adict, sort_list(mean_centrality))
+    print_top_n(adict, sort_list(mean_centrality), print_graph=True)
 
     print()
     print("TOTAL:", total_cites, "cites;", "ACCOUNTED:", cites_accounted, "cites.")

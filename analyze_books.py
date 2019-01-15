@@ -92,7 +92,7 @@ def print_top_n(books_dict, all_list, print_graph=False):
         ax.set_yticks(y_pos)
         ax.set_yticklabels(top_names)
         ax.invert_yaxis()  # labels read top-to-bottom
-        ax.set_xlabel('Средняя центральность')
+        ax.set_xlabel('Средняя центральность по произведениям')
         ax.xaxis.grid()
         # ax.set_title('How fast do you want to go today?')
         fig.tight_layout()
