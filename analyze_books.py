@@ -86,7 +86,7 @@ def print_top_n(books_dict, all_list, print_graph=False):
         fig, ax = plt.subplots()
 
         y_pos = [i - 0.5 for i in np.arange(PRINT_TOP_N)]
-        print(y_pos)
+        # print(y_pos)
         ax.barh(y_pos, top_vals, align='center',
                 color='green', ecolor='black')
         ax.set_yticks(y_pos)
@@ -97,6 +97,7 @@ def print_top_n(books_dict, all_list, print_graph=False):
         # ax.set_title('How fast do you want to go today?')
         fig.tight_layout()
         fig.savefig('top_books_mean.png')
+        fig.savefig('top_books_mean.jpg')
         # plt.tight_layout()
         # plt.show()
 
