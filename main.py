@@ -2,12 +2,18 @@ import analyze_books, analyze_authors
 import csv as csv
 
 books_dict = []
+total_books = 0
+print("================================")
+print("==== READING THE DATA SET... ===")
 with open('fantlab_books_data.csv', 'r', encoding="utf8") as csv_old:
     reader = csv.DictReader(csv_old)
     books_dict = []
     for row in reader:
+        if row["book_id_exists"] == "True":
+            total_books += 1
         books_dict.append(row)
 
+print(total_books, "books total.")
 print("================================")
 print("=======  BOOKS ANALYSIS  =======")
 print("================================")
