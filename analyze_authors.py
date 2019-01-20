@@ -99,6 +99,16 @@ def form_authors_dict(books_dict):
     return authors
 
 
+def count_total_authors(books_dict):
+    authors = []
+    for book_index in range(len(books_dict)):
+        progressBar('Counting authors number...', book_index, len(books_dict)-1, 20)
+        book = books_dict[book_index]
+        if book['book_id_exists'] == 'True':
+                authors.append(book['book_author'])
+    return len(set(authors))
+
+
 def form_authors_graph(books_dict, authors_dict):
     g = nx.DiGraph()
     for index in range(0, len(authors_dict)):
@@ -192,4 +202,4 @@ def analyze_authors(books_dict):
     print_top_n(adict, sort_list(mean_centrality), print_graph=True)
 
     print()
-    print("TOTAL:", total_cites, "cites;", "ACCOUNTED:", cites_accounted, "cites.")
+    print("TOTAL:", count_total_authors(books_dict), "authors", total_cites, "cites;", "ACCOUNTED:", cites_accounted, "cites.")
