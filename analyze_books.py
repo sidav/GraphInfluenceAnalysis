@@ -73,7 +73,7 @@ def print_top_n(books_dict, all_list, print_graph=False):
         i = top[ind]
         if len(books_dict) > i[0]:
             book = get_book_by_id(books_dict, int(i[0]))
-            top_names.append(book['book_title'] + "\n" + book['book_author'])
+            top_names.append(book['book_title'] + " (" + book["book_release_year"] + ")" "\n" + book['book_author'])
             top_vals.append(i[1])
             print(i[0], book['book_id'], '"' + book['book_title'] + '"', book['book_author'], "(" + book['book_release_year'] + ")", book['book_score'], i[1])
         else:
@@ -121,6 +121,8 @@ def analyze_books(books_dict, total_records_to_measure=-1):
                 for i in book_similar_list:
                     total_cites += 1
                     sim_book = get_book_by_id(books_dict, i)
+                    if sim_book is not None and sim_book["book_author"] == book["book_author"]:
+                        continue
                     if COUNT_MISSING_DATES:
                         if sim_book is not None and (sim_book["book_release_year"] == '' or book["book_release_year"] == '' or int(sim_book["book_release_year"]) < int(book["book_release_year"])):
                             cites_accounted += 1
