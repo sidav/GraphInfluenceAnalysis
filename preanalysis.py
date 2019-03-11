@@ -1,4 +1,4 @@
-PRINT_TOP_N = 10
+PRINT_TOP_N = 20
 
 
 def sort_list(in_list):
@@ -32,15 +32,16 @@ def do_analysis(books_list):
             centuries[book_century] = 1
             
     print(sort_list(years))
-    print_top_n(sort_list(years), "books_by_years", True)
+    print_top_n(years, "books_by_years", True)
     print(sort_list(decades))
-    print_top_n(sort_list(decades), "books_by_decades", True)
+    print_top_n(decades, "books_by_decades", True)
     print(sort_list(centuries))
-    print_top_n(sort_list(centuries), "books_by_centuries", True)
+    # print_top_n(sort_list(centuries), "books_by_centuries", True)
 
 
 
-def print_top_n(all_list, name, print_graph=False):
+def print_top_n(lst, name, print_graph=False):
+    all_list = sort_list(lst)
     top = all_list[-PRINT_TOP_N:]
 
     top_names = []
@@ -74,4 +75,42 @@ def print_top_n(all_list, name, print_graph=False):
         fig.savefig(name + '.png')
         # fig.savefig('total_books_mean.jpg')
         # plt.tight_layout()
+        # plt.show()
+
+        ################################################
+
+        # import matplotlib.dates as mdates
+        # import matplotlib.cbook as cbook
+        #
+        # years = mdates.YearLocator()  # every year
+        # months = mdates.MonthLocator()  # every month
+        # yearsFmt = mdates.DateFormatter('%Y')
+        #
+        # # Load a numpy record array from yahoo csv data with fields date, open, close,
+        # # volume, adj_close from the mpl-data/example directory. The record array
+        # # stores the date as an np.datetime64 with a day unit ('D') in the date column.
+        #
+        # fig, ax = plt.subplots()
+        # ax.plot(lst.keys(), lst.values())
+        #
+        # # format the ticks
+        # # ax.xaxis.set_major_locator(years)
+        # # ax.xaxis.set_major_formatter(yearsFmt)
+        # # ax.xaxis.set_minor_locator(months)
+        #
+        # # round to nearest years...
+        # # ax.set_xlim(1800, 2019)
+        #
+        # # format the coords message box
+        # # def price(x):
+        # #     return '$%1.2f' % x
+        # #
+        # # ax.format_xdata = mdates.DateFormatter('%Y-%m-%d')
+        # # ax.format_ydata = price
+        # ax.grid(True)
+        #
+        # # rotates and right aligns the x labels, and moves the bottom of the
+        # # axes up to make room for them
+        # # fig.autofmt_xdate()
+        #
         # plt.show()
