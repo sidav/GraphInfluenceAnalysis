@@ -1,4 +1,4 @@
-import analyze_books, analyze_authors
+import analyze_books, analyze_authors, preanalysis
 import csv as csv
 
 books_dict = []
@@ -15,12 +15,18 @@ with open('fantlab_books_data.csv', 'r', encoding="utf8") as csv_old:
 
 print(total_books, "books total.")
 print("================================")
-print("=======  BOOKS ANALYSIS  =======")
+print("=======  TURBOANALISIS   =======")
 print("================================")
 print()
-analyze_books.analyze_books(books_dict)
-print("================================")
-print("======  AUTHORS ANALYSIS  ======")
-print("================================")
-print()
-analyze_authors.analyze_authors(books_dict)
+preanalysis.do_analysis(books_dict)
+#
+# print("================================")
+# print("=======  BOOKS ANALYSIS  =======")
+# print("================================")
+# print()
+# analyze_books.analyze_books(books_dict)
+# print("================================")
+# print("======  AUTHORS ANALYSIS  ======")
+# print("================================")
+# print()
+# analyze_authors.analyze_authors(books_dict)
