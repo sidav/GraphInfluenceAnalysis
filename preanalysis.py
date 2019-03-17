@@ -13,23 +13,24 @@ def do_analysis(books_list):
         book_year = book["book_release_year"]
         book_decade = book["book_release_year"][:3] + "x"
         book_century = book["book_release_year"][:2] + "xx"
-        # print(book_decade, book_year)
-        if book["book_id_exists"] != "True":
-            continue
-        if book_year in years.keys():
-            years[book_year] += 1
-        else:
-            years[book_year] = 1
+        if book_year != "":
+            # print(book_decade, book_year)
+            if book["book_id_exists"] != "True":
+                continue
+            if book_year in years.keys():
+                years[book_year] += 1
+            else:
+                years[book_year] = 1
 
-        if book_decade in decades.keys():
-            decades[book_decade] += 1
-        else:
-            decades[book_decade] = 1
+            if book_decade in decades.keys():
+                decades[book_decade] += 1
+            else:
+                decades[book_decade] = 1
 
-        if book_century in centuries.keys():
-            centuries[book_century] += 1
-        else:
-            centuries[book_century] = 1
+            if book_century in centuries.keys():
+                centuries[book_century] += 1
+            else:
+                centuries[book_century] = 1
             
     print(sort_list(years))
     print_top_n(years, "books_by_years", True)

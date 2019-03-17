@@ -15,7 +15,7 @@ with open('fantlab_books_data.csv', 'r', encoding="utf8") as csv_old:
 
 print(total_books, "books total.")
 print("================================")
-print("=======  TURBOANALISIS   =======")
+print("===   DATASET PRE-ANALYSIS   ===")
 print("================================")
 print()
 preanalysis.do_analysis(books_dict)
