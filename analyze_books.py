@@ -132,31 +132,34 @@ def analyze_books(books_dict, total_records_to_measure=-1):
                             cites_accounted += 1
                             g.add_edge(book_id, i)
 
+    print(g.number_of_edges())
+    # print(normalize_dict(nx.in_degree_centrality(g)))
+
     # MEASUREMENTS
-    print('------- BOOKS INFLUENCE ANALYSIS -------')
-    print('Graph is built. Calculating in-degree centrality...')
-    idg = normalize_dict(nx.in_degree_centrality(g))
-    print_top_n(books_dict,sort_list(idg))
-
-    print()
-    print('Calculating closeness centrality...')
-    cls = normalize_dict(nx.closeness_centrality(g))
-    print_top_n(books_dict,sort_list(cls))
-
-    print()
-    print('Calculating harmonic centrality...')
-    hrm = normalize_dict(nx.harmonic_centrality(g))
-    print_top_n(books_dict,sort_list(hrm))
-
-    print()
-    print('Calculating PageRank centrality...')
-    pgr = normalize_dict(nx.pagerank(g))
-    print_top_n(books_dict,sort_list(pgr))
-
-    print()
-    print('Calculating mean centrality...')
-    mean_centrality = normalize_dict(calculate_mean_of_values_for_keys(idg, cls, hrm, pgr))
-    print_top_n(books_dict, sort_list(mean_centrality), print_graph=True)
+    # print('------- BOOKS INFLUENCE ANALYSIS -------')
+    # print('Graph is built. Calculating in-degree centrality...')
+    # idg = normalize_dict(nx.in_degree_centrality(g))
+    # print_top_n(books_dict,sort_list(idg))
+    #
+    # print()
+    # print('Calculating closeness centrality...')
+    # cls = normalize_dict(nx.closeness_centrality(g))
+    # print_top_n(books_dict,sort_list(cls))
+    #
+    # print()
+    # print('Calculating harmonic centrality...')
+    # hrm = normalize_dict(nx.harmonic_centrality(g))
+    # print_top_n(books_dict,sort_list(hrm))
+    #
+    # print()
+    # print('Calculating PageRank centrality...')
+    # pgr = normalize_dict(nx.pagerank(g))
+    # print_top_n(books_dict,sort_list(pgr))
+    #
+    # print()
+    # print('Calculating mean centrality...')
+    # mean_centrality = normalize_dict(calculate_mean_of_values_for_keys(idg, cls, hrm, pgr))
+    # print_top_n(books_dict, sort_list(mean_centrality), print_graph=True)
 
     print()
     print("TOTAL:", total_cites, "cites;", "ACCOUNTED:", cites_accounted, "cites.")

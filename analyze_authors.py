@@ -173,33 +173,35 @@ def print_top_n(adict, all_list, print_graph=False):
 def analyze_authors(books_dict):
     adict = form_authors_dict(books_dict)
     g = form_authors_graph(books_dict, adict)
+    print(g.number_of_edges())
 
-    # MEASUREMENTS
-    print()
-    print('------- AUTHORS INFLUENCE ANALYSIS -------')
-    print('Graph is built. Calculating in-degree centrality...')
-    idg = normalize_dict(nx.in_degree_centrality(g))
-    print_top_n(adict, sort_list(idg))
 
-    print()
-    print('Calculating closeness centrality...')
-    cls = normalize_dict(nx.closeness_centrality(g))
-    print_top_n(adict, sort_list(cls))
-
-    print()
-    print('Calculating harmonic centrality...')
-    hrm = normalize_dict(nx.harmonic_centrality(g))
-    print_top_n(adict, sort_list(hrm))
-
-    print()
-    print('Calculating PageRank centrality...')
-    pgr = normalize_dict(nx.pagerank(g))
-    print_top_n(adict, sort_list(pgr))
-
-    print()
-    print('Calculating mean centrality...')
-    mean_centrality = normalize_dict(calculate_mean_of_values_for_keys(idg, cls, hrm, pgr))
-    print_top_n(adict, sort_list(mean_centrality), print_graph=True)
-
-    print()
-    print("TOTAL:", count_total_authors(books_dict), "authors", total_cites, "cites;", "ACCOUNTED:", cites_accounted, "cites.")
+    # # MEASUREMENTS
+    # print()
+    # print('------- AUTHORS INFLUENCE ANALYSIS -------')
+    # print('Graph is built. Calculating in-degree centrality...')
+    # idg = normalize_dict(nx.in_degree_centrality(g))
+    # print_top_n(adict, sort_list(idg))
+    #
+    # print()
+    # print('Calculating closeness centrality...')
+    # cls = normalize_dict(nx.closeness_centrality(g))
+    # print_top_n(adict, sort_list(cls))
+    #
+    # print()
+    # print('Calculating harmonic centrality...')
+    # hrm = normalize_dict(nx.harmonic_centrality(g))
+    # print_top_n(adict, sort_list(hrm))
+    #
+    # print()
+    # print('Calculating PageRank centrality...')
+    # pgr = normalize_dict(nx.pagerank(g))
+    # print_top_n(adict, sort_list(pgr))
+    #
+    # print()
+    # print('Calculating mean centrality...')
+    # mean_centrality = normalize_dict(calculate_mean_of_values_for_keys(idg, cls, hrm, pgr))
+    # print_top_n(adict, sort_list(mean_centrality), print_graph=True)
+    #
+    # print()
+    # print("TOTAL:", count_total_authors(books_dict), "authors", total_cites, "cites;", "ACCOUNTED:", cites_accounted, "cites.")
