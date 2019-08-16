@@ -13,6 +13,13 @@ with open('fantlab_books_data.csv', 'r', encoding="utf8") as csv_old:
             total_books += 1
         books_dict.append(row)
 
+total_links = 0
+for book in books_dict:
+    if len(book["book_similar"]) > 0:
+        total_links += len(book["book_similar"].split(";"))
+
+print("Total unfiltered links existing: %d" % total_links)
+
 print(total_books, "books total.")
 print("================================")
 print("===   DATASET PRE-ANALYSIS   ===")
