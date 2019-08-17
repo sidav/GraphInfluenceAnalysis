@@ -131,6 +131,8 @@ def analyze_books(books_dict, total_records_to_measure=-1):
 
     # print(normalize_dict(nx.in_degree_centrality(g)))
 
+    nx.write_graphml(g, "books_graph.xml")
+
     # MEASUREMENTS
     print('------- BOOKS INFLUENCE ANALYSIS -------')
     print('Graph is built. Calculating in-degree centrality...')

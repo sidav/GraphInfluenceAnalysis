@@ -172,6 +172,7 @@ def analyze_authors(books_dict):
     g = form_authors_graph(books_dict, adict)
     print(g.number_of_edges())
 
+    nx.write_graphml(g, "authors_graph.xml")
 
     # MEASUREMENTS
     print()
