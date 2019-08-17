@@ -20,18 +20,21 @@ for book in books_dict:
 
 print("Total unfiltered links existing: %d" % total_links)
 
-print(total_books, "books total.")
-print("================================")
-print("===   DATASET PRE-ANALYSIS   ===")
-print("================================")
-print()
-preanalysis.do_analysis(books_dict)
-#
+# print(total_books, "books total.")
 # print("================================")
-# print("=======  BOOKS ANALYSIS  =======")
+# print("===   DATASET PRE-ANALYSIS   ===")
 # print("================================")
 # print()
-# analyze_books.analyze_books(books_dict)
+# preanalysis.do_analysis(books_dict)
+
+
+print("================================")
+print("=======  BOOKS ANALYSIS  =======")
+print("================================")
+print()
+analyze_books.analyze_books(books_dict)
+
+
 # print("================================")
 # print("======  AUTHORS ANALYSIS  ======")
 # print("================================")
