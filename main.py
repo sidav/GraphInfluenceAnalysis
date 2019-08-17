@@ -19,6 +19,7 @@ for book in books_dict:
         total_links += len(book["book_similar"].split(";"))
 
 print("Total unfiltered links existing: %d" % total_links)
+print()
 
 # print(total_books, "books total.")
 # print("================================")
@@ -35,8 +36,8 @@ print()
 analyze_books.analyze_books(books_dict)
 
 
-# print("================================")
-# print("======  AUTHORS ANALYSIS  ======")
-# print("================================")
-# print()
-# analyze_authors.analyze_authors(books_dict)
+print("================================")
+print("======  AUTHORS ANALYSIS  ======")
+print("================================")
+print()
+analyze_authors.analyze_authors(books_dict)

@@ -1,5 +1,5 @@
 import networkx as nx
-from lists import sort_list, correlation_between, calc_corrs_for_dict
+from lists import sort_list, calc_corrs_for_dict
 
 COUNT_MISSING_DATES = False
 PRINT_TOP_N = 10

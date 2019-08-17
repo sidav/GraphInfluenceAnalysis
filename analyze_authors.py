@@ -1,7 +1,9 @@
 import networkx as nx
+from lists import sort_list, correlation_between, calc_corrs_for_dict
 
 COUNT_MISSING_DATES = False
 PRINT_TOP_N = 10
+FRACTION_FOR_CORRELATION = 0.1
 total_cites = cites_accounted = 0
 
 def progressBar(title, value, endvalue, bar_length=20):
@@ -27,11 +29,6 @@ def normalize_dict(dct):  # makes all the values in range [0,1]
     for key in dct.keys():
         dct[key] = (dct[key] - lowest_val) / (highest_val - lowest_val)
     return dct
-
-
-def sort_list(in_list):
-    return sorted(in_list.items(), key=lambda x: x[1])
-
 
 ########### MEAN CENTRALITY #########
 def calculate_mean_of_values_for_keys(d1, d2, d3, d4):
@@ -176,32 +173,43 @@ def analyze_authors(books_dict):
     print(g.number_of_edges())
 
 
-    # # MEASUREMENTS
-    # print()
-    # print('------- AUTHORS INFLUENCE ANALYSIS -------')
-    # print('Graph is built. Calculating in-degree centrality...')
-    # idg = normalize_dict(nx.in_degree_centrality(g))
-    # print_top_n(adict, sort_list(idg))
-    #
-    # print()
-    # print('Calculating closeness centrality...')
-    # cls = normalize_dict(nx.closeness_centrality(g))
-    # print_top_n(adict, sort_list(cls))
-    #
-    # print()
-    # print('Calculating harmonic centrality...')
-    # hrm = normalize_dict(nx.harmonic_centrality(g))
-    # print_top_n(adict, sort_list(hrm))
-    #
-    # print()
-    # print('Calculating PageRank centrality...')
-    # pgr = normalize_dict(nx.pagerank(g))
-    # print_top_n(adict, sort_list(pgr))
-    #
-    # print()
-    # print('Calculating mean centrality...')
-    # mean_centrality = normalize_dict(calculate_mean_of_values_for_keys(idg, cls, hrm, pgr))
-    # print_top_n(adict, sort_list(mean_centrality), print_graph=True)
-    #
-    # print()
-    # print("TOTAL:", count_total_authors(books_dict), "authors", total_cites, "cites;", "ACCOUNTED:", cites_accounted, "cites.")
+    # MEASUREMENTS
+    print()
+    print('------- AUTHORS INFLUENCE ANALYSIS -------')
+    print('Graph is built. Calculating in-degree centrality...')
+    idg = normalize_dict(nx.in_degree_centrality(g))
+    print_top_n(adict, sort_list(idg))
+
+    print()
+    print('Calculating closeness centrality...')
+    cls = normalize_dict(nx.closeness_centrality(g))
+    print_top_n(adict, sort_list(cls))
+
+    print()
+    print('Calculating harmonic centrality...')
+    hrm = normalize_dict(nx.harmonic_centrality(g))
+    print_top_n(adict, sort_list(hrm))
+
+    print()
+    print('Calculating PageRank centrality...')
+    pgr = normalize_dict(nx.pagerank(g))
+    print_top_n(adict, sort_list(pgr))
+
+    print()
+    print('Calculating mean centrality...')
+    mean_centrality = normalize_dict(calculate_mean_of_values_for_keys(idg, cls, hrm, pgr))
+    print_top_n(adict, sort_list(mean_centrality), print_graph=True)
+
+
+    print()
+    print('CENTRALITY CORRELATIONS:')
+    cents_dict = {}
+    cents_dict["in-degree"] = sort_list(idg)
+    cents_dict["closeness"] = sort_list(cls)
+    cents_dict["harmonic"] = sort_list(hrm)
+    cents_dict["PageRank"] = sort_list(pgr)
+    cents_dict["Mean"] = sort_list(mean_centrality)
+    calc_corrs_for_dict(cents_dict, int(g.number_of_nodes() * FRACTION_FOR_CORRELATION))
+
+    print()
+    print("TOTAL:", count_total_authors(books_dict), "authors", total_cites, "cites;", "ACCOUNTED:", cites_accounted, "cites.")
