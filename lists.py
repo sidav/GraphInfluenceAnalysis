@@ -59,10 +59,14 @@ def calculate_pandas_corr(cents_dict):
     return df.corr(method='spearman')
 
 
-def plot_corr_to_file(result, name):
-    mask = np.zeros_like(result)
+def plot_corr_to_file(d, name):
+    import matplotlib.pyplot as plt
+
+    mask = np.zeros_like(d)
     mask[np.triu_indices_from(mask, k=1)] = True
-    resmap = sns.heatmap(result, xticklabels=result.columns, yticklabels=result.columns, annot=True, mask=mask,
-                         cmap="YlGn", fmt=".3").get_figure()
+    f, ax = plt.subplots(figsize=(5, 5))
+    resmap = sns.heatmap(d, xticklabels=d.columns, yticklabels=d.columns, annot=True, fmt=".2f", ax=ax,
+                         mask=mask, cmap="YlGn"
+                         ).get_figure()
 
     resmap.savefig("corr_matrix_%s.png" % name)
