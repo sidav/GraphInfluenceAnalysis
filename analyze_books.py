@@ -102,38 +102,46 @@ def print_top_n(books_dict, all_list, print_graph=False):
 
 def analyze_books(books_dict, total_records_to_measure=-1):
     g = nx.DiGraph()
-
-    # read all the books and append'em to the graph.
     cites_accounted = 0
     total_cites = 0
-    for book_index in range(len(books_dict)):
-        if book_index == total_records_to_measure:
-            break
-        progressBar("Building the books influence graph...", book_index, len(books_dict)-1, 20)
-        book = books_dict[book_index]
-        if book['book_id_exists'] == 'True':
-            book_id = int(book['book_id'])
 
-            if len(book['book_similar']) > 0:
-                book_similar_list = list(map(lambda x: int(x), book['book_similar'].split(';')))
-                for i in book_similar_list:
-                    total_cites += 1
-                    sim_book = get_book_by_id(books_dict, i)
-                    if sim_book is not None and sim_book["book_author"] == book["book_author"]:
-                        continue
-                    if COUNT_MISSING_DATES:
-                        if sim_book is not None and (sim_book["book_release_year"] == '' or book["book_release_year"] == '' or int(sim_book["book_release_year"]) < int(book["book_release_year"])):
-                            cites_accounted += 1
-                            g.add_edge(book_id, i)
-                    else:
-                        if sim_book is not None and (sim_book["book_release_year"] != '' and book["book_release_year"] != '' and int(sim_book["book_release_year"]) < int(book["book_release_year"])):
-                            cites_accounted += 1
-                            g.add_edge(book_id, i)
+    from pathlib import Path
 
-    # print(normalize_dict(nx.in_degree_centrality(g)))
+    my_file = Path("graph_books.graphml")
+    if my_file.is_file():
+        g = nx.read_graphml("graph_books.graphml", node_type=int)
+    else:
+        # read all the books and append'em to the graph.
+        cites_accounted = 0
+        total_cites = 0
+        for book_index in range(len(books_dict)):
+            if book_index == total_records_to_measure:
+                break
+            progressBar("Building the books influence graph...", book_index, len(books_dict)-1, 20)
+            book = books_dict[book_index]
+            if book['book_id_exists'] == 'True':
+                book_id = int(book['book_id'])
 
-    nx.write_graphml(g, "books_graph.xml")
+                if len(book['book_similar']) > 0:
+                    book_similar_list = list(map(lambda x: int(x), book['book_similar'].split(';')))
+                    for i in book_similar_list:
+                        total_cites += 1
+                        sim_book = get_book_by_id(books_dict, i)
+                        if sim_book is not None and sim_book["book_author"] == book["book_author"]:
+                            continue
+                        if COUNT_MISSING_DATES:
+                            if sim_book is not None and (sim_book["book_release_year"] == '' or book["book_release_year"] == '' or int(sim_book["book_release_year"]) < int(book["book_release_year"])):
+                                cites_accounted += 1
+                                g.add_edge(book_id, i)
+                        else:
+                            if sim_book is not None and (sim_book["book_release_year"] != '' and book["book_release_year"] != '' and int(sim_book["book_release_year"]) < int(book["book_release_year"])):
+                                cites_accounted += 1
+                                g.add_edge(book_id, i)
 
+        # print(normalize_dict(nx.in_degree_centrality(g)))
+        nx.write_graphml(g, "graph_books.graphml")
+
+    ##############
     # MEASUREMENTS
     print('------- BOOKS INFLUENCE ANALYSIS -------')
     print('Graph is built. Calculating in-degree centrality...')
@@ -169,9 +177,10 @@ def analyze_books(books_dict, total_records_to_measure=-1):
     cents_dict["PageRank"] = sort_list(pgr)
     cents_dict["Mean"] = sort_list(mean_centrality)
 
-    corrs_count = 200  # int(len(mean_centrality) * FRACTION_FOR_CORRELATION)
+    corrs_count = 50  # int(len(mean_centrality) * FRACTION_FOR_CORRELATION)
     calc_corrs_for_dict(cents_dict, corrs_count)
     list_ops.pandas_corr(cents_dict, corrs_count, "books")
 
-    print()
-    print("TOTAL:", total_cites, "cites;", "ACCOUNTED:", cites_accounted, "cites.")
+    if cites_accounted != 0 and total_cites != 0:
+        print()
+        print("TOTAL:", total_cites, "cites;", "ACCOUNTED:", cites_accounted, "cites.")
