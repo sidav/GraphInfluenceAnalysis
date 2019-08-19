@@ -1,5 +1,5 @@
 import networkx as nx
-from lists import sort_list, correlation_between, calc_corrs_for_dict
+from lists import sort_list
 import lists as list_ops
 
 COUNT_MISSING_DATES = False
@@ -173,7 +173,7 @@ def analyze_authors(books_dict):
     g = form_authors_graph(books_dict, adict)
     print(g.number_of_edges())
 
-    nx.write_graphml(g, "authors_graph.xml")
+    nx.write_graphml(g, "graph_authors.graphml")
 
     # MEASUREMENTS
     print()
@@ -206,14 +206,13 @@ def analyze_authors(books_dict):
     print()
     print('CENTRALITY CORRELATIONS:')
     cents_dict = {}
-    cents_dict["in-degree"] = sort_list(idg)
-    cents_dict["closeness"] = sort_list(cls)
-    cents_dict["harmonic"] = sort_list(hrm)
-    cents_dict["PageRank"] = sort_list(pgr)
-    cents_dict["Mean"] = sort_list(mean_centrality)
+    cents_dict["in-degree"] = idg
+    cents_dict["closeness"] = cls
+    cents_dict["harmonic"] = hrm
+    cents_dict["PageRank"] = pgr
+    cents_dict["Mean"] = mean_centrality
 
     corrs_count = 100  # int(len(mean_centrality) * FRACTION_FOR_CORRELATION)
-    calc_corrs_for_dict(cents_dict, corrs_count)
     list_ops.pandas_corr(cents_dict, corrs_count, "authors")
 
     print()
