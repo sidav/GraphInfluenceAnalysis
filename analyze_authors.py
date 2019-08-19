@@ -1,5 +1,6 @@
 import networkx as nx
 from lists import sort_list, correlation_between, calc_corrs_for_dict
+import lists as list_ops
 
 COUNT_MISSING_DATES = False
 PRINT_TOP_N = 10
@@ -211,6 +212,7 @@ def analyze_authors(books_dict):
     cents_dict["PageRank"] = sort_list(pgr)
     cents_dict["Mean"] = sort_list(mean_centrality)
     calc_corrs_for_dict(cents_dict, int(g.number_of_nodes() * FRACTION_FOR_CORRELATION))
+    list_ops.pandas_corr(cents_dict, int(g.number_of_nodes() * FRACTION_FOR_CORRELATION), "authors")
 
     print()
     print("TOTAL:", count_total_authors(books_dict), "authors", total_cites, "cites;", "ACCOUNTED:", cites_accounted, "cites.")

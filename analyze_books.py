@@ -1,9 +1,10 @@
 import networkx as nx
 from lists import sort_list, calc_corrs_for_dict
+import lists as list_ops
 
 COUNT_MISSING_DATES = False
 PRINT_TOP_N = 10
-FRACTION_FOR_CORRELATION = 0.01
+FRACTION_FOR_CORRELATION = 0.05
 
 def normalize_dict(dct):  # makes all the values in range [0,1]
     lowest_val = 9999999.0
@@ -167,7 +168,8 @@ def analyze_books(books_dict, total_records_to_measure=-1):
     cents_dict["harmonic"] = sort_list(hrm)
     cents_dict["PageRank"] = sort_list(pgr)
     cents_dict["Mean"] = sort_list(mean_centrality)
-    calc_corrs_for_dict(cents_dict, int(g.number_of_nodes() * FRACTION_FOR_CORRELATION))
+    calc_corrs_for_dict(cents_dict, int(len(mean_centrality) * FRACTION_FOR_CORRELATION))
+    list_ops.pandas_corr(cents_dict, int(len(mean_centrality) * FRACTION_FOR_CORRELATION), "books")
 
     print()
     print("TOTAL:", total_cites, "cites;", "ACCOUNTED:", cites_accounted, "cites.")
