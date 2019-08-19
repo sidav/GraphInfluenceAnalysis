@@ -4,7 +4,7 @@ import lists as list_ops
 
 COUNT_MISSING_DATES = False
 PRINT_TOP_N = 10
-FRACTION_FOR_CORRELATION = 0.1
+FRACTION_FOR_CORRELATION = 0.12
 total_cites = cites_accounted = 0
 
 def progressBar(title, value, endvalue, bar_length=20):
@@ -211,8 +211,10 @@ def analyze_authors(books_dict):
     cents_dict["harmonic"] = sort_list(hrm)
     cents_dict["PageRank"] = sort_list(pgr)
     cents_dict["Mean"] = sort_list(mean_centrality)
-    calc_corrs_for_dict(cents_dict, int(g.number_of_nodes() * FRACTION_FOR_CORRELATION))
-    list_ops.pandas_corr(cents_dict, int(g.number_of_nodes() * FRACTION_FOR_CORRELATION), "authors")
+
+    corrs_count = 100  # int(len(mean_centrality) * FRACTION_FOR_CORRELATION)
+    calc_corrs_for_dict(cents_dict, corrs_count)
+    list_ops.pandas_corr(cents_dict, corrs_count, "authors")
 
     print()
     print("TOTAL:", count_total_authors(books_dict), "authors", total_cites, "cites;", "ACCOUNTED:", cites_accounted, "cites.")

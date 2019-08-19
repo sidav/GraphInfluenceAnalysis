@@ -168,8 +168,10 @@ def analyze_books(books_dict, total_records_to_measure=-1):
     cents_dict["harmonic"] = sort_list(hrm)
     cents_dict["PageRank"] = sort_list(pgr)
     cents_dict["Mean"] = sort_list(mean_centrality)
-    calc_corrs_for_dict(cents_dict, int(len(mean_centrality) * FRACTION_FOR_CORRELATION))
-    list_ops.pandas_corr(cents_dict, int(len(mean_centrality) * FRACTION_FOR_CORRELATION), "books")
+
+    corrs_count = 200  # int(len(mean_centrality) * FRACTION_FOR_CORRELATION)
+    calc_corrs_for_dict(cents_dict, corrs_count)
+    list_ops.pandas_corr(cents_dict, corrs_count, "books")
 
     print()
     print("TOTAL:", total_cites, "cites;", "ACCOUNTED:", cites_accounted, "cites.")
