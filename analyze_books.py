@@ -1,6 +1,8 @@
 import networkx as nx
 from lists import sort_list  # , calc_corrs_for_dict
 import lists as list_ops
+import copy
+from pathlib import Path
 
 COUNT_MISSING_DATES = False
 PRINT_TOP_N = 10
@@ -100,12 +102,23 @@ def print_top_n(books_dict, all_list, print_graph=False):
         # plt.show()
 
 
+def export_books_graph_by_name(graph, books_dict):
+    filename = "NAMED_graph_books.graphml"
+    if not Path(filename).is_file():
+        def mapping(id):
+            for book in books_dict:
+                if int(book['book_id']) == id:
+                    return "%s (%s)" % (book['book_title'], book["book_author"])
+            return "UNSET %d" % id
+        name_graph = copy.deepcopy(graph)
+        nx.relabel_nodes(name_graph, mapping, copy=False)
+        nx.write_graphml(name_graph, filename)
+
+
 def analyze_books(books_dict, total_records_to_measure=-1):
     g = nx.DiGraph()
     cites_accounted = 0
     total_cites = 0
-
-    from pathlib import Path
 
     my_file = Path("graph_books.graphml")
     if my_file.is_file():
@@ -141,6 +154,7 @@ def analyze_books(books_dict, total_records_to_measure=-1):
         # print(normalize_dict(nx.in_degree_centrality(g)))
         nx.write_graphml(g, "graph_books.graphml")
 
+    export_books_graph_by_name(g, books_dict)
     ##############
     # MEASUREMENTS
     print('------- BOOKS INFLUENCE ANALYSIS -------')

@@ -1,6 +1,8 @@
 import networkx as nx
 from lists import sort_list
 import lists as list_ops
+from pathlib import Path
+import copy
 
 COUNT_MISSING_DATES = False
 PRINT_TOP_N = 10
@@ -168,12 +170,23 @@ def print_top_n(adict, all_list, print_graph=False):
         # plt.show()
 
 
+def export_authors_graph_by_name(graph, authors_dict):
+    filename = "NAMED_graph_authors.graphml"
+    if not Path(filename).is_file():
+        def mapping(id):
+            return "%s" % (authors_dict[id]["name"])
+        name_graph = copy.deepcopy(graph)
+        nx.relabel_nodes(name_graph, mapping, copy=False)
+        nx.write_graphml(name_graph, filename)
+
+
 def analyze_authors(books_dict):
     adict = form_authors_dict(books_dict)
     g = form_authors_graph(books_dict, adict)
     print(g.number_of_edges())
 
     nx.write_graphml(g, "graph_authors.graphml")
+    export_authors_graph_by_name(g, adict)
 
     # MEASUREMENTS
     print()
