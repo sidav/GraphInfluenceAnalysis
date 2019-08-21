@@ -3,6 +3,7 @@ from lists import sort_list  # , calc_corrs_for_dict
 import lists as list_ops
 import copy
 from pathlib import Path
+from progress_bar import progressBar
 
 COUNT_MISSING_DATES = False
 PRINT_TOP_N = 10
@@ -19,19 +20,6 @@ def normalize_dict(dct):  # makes all the values in range [0,1]
     for key in dct.keys():
         dct[key] = (dct[key] - lowest_val) / (highest_val - lowest_val)
     return dct
-
-
-def progressBar(title, value, endvalue, bar_length=20):
-    import sys
-    percent = float(value) / endvalue
-    arrow = '-' * int(round(percent * bar_length) - 1) + '>'
-    spaces = ' ' * (bar_length - len(arrow))
-
-    sys.stdout.write("\r" + title + " [{0}] {1}% ({2} out of {3})".format(arrow + spaces, int(round(percent * 100)), value, endvalue))
-    if value == endvalue:
-        sys.stdout.write("\n")
-    sys.stdout.flush()
-
 
 def get_book_by_id(books_dict, requested_id):
     requested_id = int(requested_id)

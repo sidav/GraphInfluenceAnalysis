@@ -3,23 +3,12 @@ from lists import sort_list
 import lists as list_ops
 from pathlib import Path
 import copy
+from progress_bar import progressBar
 
 COUNT_MISSING_DATES = False
 PRINT_TOP_N = 10
 FRACTION_FOR_CORRELATION = 0.12
 total_cites = cites_accounted = 0
-
-def progressBar(title, value, endvalue, bar_length=20):
-    import sys
-    percent = float(value) / endvalue
-    arrow = '-' * int(round(percent * bar_length) - 1) + '>'
-    spaces = ' ' * (bar_length - len(arrow))
-
-    sys.stdout.write("\r" + title + " [{0}] {1}% ({2} out of {3})".format(arrow + spaces, int(round(percent * 100)), value, endvalue))
-    if value == endvalue:
-        sys.stdout.write("\n")
-    sys.stdout.flush()
-
 
 def normalize_dict(dct):  # makes all the values in range [0,1]
     lowest_val = 9999999.0
